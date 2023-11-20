@@ -13,13 +13,19 @@ const TOTAL_MARK = 150
 const MARK_PERCENT = 100
 const FAIL_PERCENT = 40
 
+const elForm = getElement('.filter')
+const elInputName = getElement('.input__name')
+const elAddForm = getElement('.add-form')
+const elInputAddName = getElement('.add-input__name')
+const elInputAddLastName = getElement('.add-input__lastname')
+const elInputAddMark = getElement('.add-input__mark')
 const elTableBody = getElement('#students-table-body')
 const elTemlate = getElement('#student-template').content
 let elCount = getElement('.count')
 
 
 
-
+// ! rendering students table
 const renderTableStudent = (students, goingElement ) =>{
 	goingElement.innerHTML =  null
 	const fragment  = document.createDocumentFragment()
@@ -51,5 +57,35 @@ const renderTableStudent = (students, goingElement ) =>{
 	})
 	goingElement.append(fragment)
 }
-
 renderTableStudent(students, elTableBody)
+
+// ! filtering students
+const filterSearch = (e) => {
+	e.preventDefault()
+	if (elInputName.value === '') {
+		return renderTableStudent(students, elTableBody)
+	}
+	renderTableStudent(students.filter(student => elInputName.value.toLowerCase().trim().includes(student.name.toLowerCase() && student.lastName.toLowerCase() )),elTableBody)
+	e.target.reset()
+}
+// ! add new student 
+const addNewStudent = (e) =>{
+	
+	e.preventDefault()
+	if(elInputAddName.value.trim() && elInputAddLastName.value.trim() &&  elInputAddMark.value.trim()) {
+		students.push({
+			id: students[4].id + 1 ,
+			name: elInputAddName.value,
+			lastName: elInputAddLastName.value,
+			mark: elInputAddMark.value,
+			markedDate: new Date().toISOString()
+		})
+		renderTableStudent(students, elTableBody)
+	}
+	
+	
+}
+
+
+elAddForm.addEventListener('submit', addNewStudent)
+elForm.addEventListener('submit', filterSearch)

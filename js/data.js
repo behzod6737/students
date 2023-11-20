@@ -9,7 +9,7 @@ const students = [
   {
     id: 101,
     name: "Asadbek",
-    lastName: "",
+    lastName: "Odilov",
     mark: 146,
     markedDate: new Date("2021-12-06").toISOString()
   },
@@ -34,11 +34,5 @@ const students = [
     mark: 150,
     markedDate: new Date("2022-03-29").toISOString()
   },
-  {
-    id: 105,
-    name: "Kamronbek",
-    lastName: "Zoirov",
-    mark: 20,
-    markedDate: new Date("2022-03-29").toISOString()
-  }
+
 ]
