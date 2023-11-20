@@ -59,6 +59,7 @@
           <h2 class="h4 mb-4">Students list</h2>
           <p class="count">Count: 4</p>
         </div>
+        <p class="text-end avarage-mark">Average mark: 65%</p>
 
         <table id="students-table" class="table table-striped align-middle">
           <thead class="align-middle">
@@ -140,7 +141,7 @@
 
   <!--  -->
   <template id="student-template">
-    <tr class="student__table-row">
+    <tr  class="student__table-row">
       <td class="py-3 text-center student-id">1</td>
       <td class="py-3 fw-bold student-name">Falonchi Falonchiev</td>
       <td class="py-3 student-marked-date">2021-12-05</td>
@@ -151,13 +152,12 @@
         </p>
       </td>
       <td class="py-3 text-center">
-        <button class="btn btn-outline-secondary student-edit" data-bs-toggle="modal" data-bs-target="#edit-student-modal"
-          data-id="">
+        <button class="btn btn-outline-secondary student-edit" data-bs-toggle="modal" data-bs-target="#edit-student-modal">
           <i class="fa-solid fa-pen" style="pointer-events: none;"></i>
         </button>
       </td>
       <td class="py-3 text-center">
-        <button class="btn btn-outline-danger student-delete" data-id="">
+        <button class="btn btn-outline-danger student-delete">
           <i class="fa-solid fa-trash" style="pointer-events: none;"></i>
         </button>
       </td>

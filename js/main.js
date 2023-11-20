@@ -21,7 +21,9 @@ const elInputAddLastName = getElement('.add-input__lastname')
 const elInputAddMark = getElement('.add-input__mark')
 const elTableBody = getElement('#students-table-body')
 const elTemlate = getElement('#student-template').content
-let elCount = getElement('.count')
+const  elCount = getElement('.count')
+let elAvarageMark = getElement('.avarage-mark')
+
 
 
 
@@ -31,18 +33,18 @@ const renderTableStudent = (students, goingElement ) =>{
 	const fragment  = document.createDocumentFragment()
 
 	elCount.textContent = `count: ${students.length}` 
-	
+
 	students.forEach(student => {
 		const template = elTemlate.cloneNode(true)
 		const {id,name,lastName,mark,markedDate} = student
 
-		getElement('.student__table-row',template).id = id
+		getElement('.student__table-row',template).setAttribute('data-id', id) 
 		getElement('.student-id',template).id = id
 		getElement('.student-id',template).textContent = id
 		getElement('.student-name',template).textContent = `${name} ${lastName}`
 		getElement('.student-marked-date',template).textContent = fixDate(markedDate)
 		let markTotalPercent = Math.round((mark * MARK_PERCENT) / TOTAL_MARK)
-
+		elAvarageMark.textContent = `Average mark:65%`
 		// shunaqa yo'l bilan chaqirib osayam boladi dom nodani 
 		template.querySelector('.student-mark').textContent = markTotalPercent + '%';
 
@@ -88,6 +90,20 @@ const addNewStudent = (e) =>{
 	
 }
 
+// !delete button 
+
+const onTableClick = (event) =>{
+	if (event.target.matches('.student-delete')) {
+		const currentRowId = event.target.closest('.student__table-row').dataset.id
+		const currentStudent = students.findIndex(student => student.id === +currentRowId)
+		students.splice(currentStudent,1)
+		renderTableStudent(students, elTableBody)
+	}
+}
+
+if (elTableBody) {
+	elTableBody.addEventListener('click' , onTableClick)
+}
 
 elAddForm.addEventListener('submit', addNewStudent)
 elForm.addEventListener('submit', filterSearch)
