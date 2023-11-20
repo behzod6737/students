@@ -65,7 +65,7 @@ const filterSearch = (e) => {
 	if (elInputName.value === '') {
 		return renderTableStudent(students, elTableBody)
 	}
-	renderTableStudent(students.filter(student => elInputName.value.toLowerCase().trim().includes(student.name.toLowerCase() && student.lastName.toLowerCase() )),elTableBody)
+	renderTableStudent(students.filter(student => elInputName.value.toLowerCase().trim().includes(student.name.toLowerCase() ) || elInputName.value.toLowerCase().trim().includes(student.lastName.toLowerCase()) ),elTableBody)
 	e.target.reset()
 }
 // ! add new student 
