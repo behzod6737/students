@@ -74,13 +74,15 @@ const addNewStudent = (e) =>{
 	e.preventDefault()
 	if(elInputAddName.value.trim() && elInputAddLastName.value.trim() &&  elInputAddMark.value.trim()) {
 		students.push({
-			id: students[4].id + 1 ,
+			id: students[students.length -1].id + 1 ,
 			name: elInputAddName.value,
 			lastName: elInputAddLastName.value,
 			mark: elInputAddMark.value,
 			markedDate: new Date().toISOString()
 		})
 		renderTableStudent(students, elTableBody)
+		e.target.reset()
+		alert('add new student')		
 	}
 	
 	
