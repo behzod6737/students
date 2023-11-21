@@ -19,6 +19,12 @@ const elAddForm = getElement('.add-form')
 const elInputAddName = getElement('.add-input__name')
 const elInputAddLastName = getElement('.add-input__lastname')
 const elInputAddMark = getElement('.add-input__mark')
+
+const elInputEditForm = getElement('.edit__form')
+const elInputEditName = getElement('#edit-name')
+const elInputEditLastName = getElement('#edit-lastname')
+const elInputEditMark = getElement('#edit-mark')
+
 const elTableBody = getElement('#students-table-body')
 const elTemlate = getElement('#student-template').content
 const  elCount = getElement('.count')
@@ -90,14 +96,46 @@ const addNewStudent = (e) =>{
 	
 }
 
-// !delete button 
+// !edit va delete button 
 
 const onTableClick = (event) =>{
+	
 	if (event.target.matches('.student-delete')) {
 		const currentRowId = event.target.closest('.student__table-row').dataset.id
-		const currentStudent = students.findIndex(student => student.id === +currentRowId)
-		students.splice(currentStudent,1)
+		const currentStudentIndex = students.findIndex(student =>  student.id === +currentRowId)
+		students.splice(currentStudentIndex,1)
 		renderTableStudent(students, elTableBody)
+	}else if (event.target.matches('.student-edit')) {
+		const currentRowId = event.target.closest('.student__table-row').dataset.id
+			
+		const currentStudentIndex = students.findIndex(student => student.id === +currentRowId)
+
+		const {name, lastName, mark,id,markedDate} = students[currentStudentIndex]
+
+
+		elInputEditName.value = name
+		elInputEditLastName.value = lastName
+		elInputEditMark.value = mark
+
+		elInputEditForm.addEventListener('submit', (event) => {
+			event.preventDefault()
+			
+			if (elInputEditName.value.trim() && elInputEditLastName.value.trim() && +elInputEditMark.value.trim() && +elInputEditMark.value >= 0 && +elInputEditMark.value  <= 150 ) {
+				
+				const editedStudent = {
+					id,
+					markedDate,
+					name: elInputEditName.value,
+					lastName: elInputEditLastName.value,
+					mark : elInputEditMark.value
+				}
+				students.splice(currentStudentIndex,1,editedStudent)
+			}
+
+			renderTableStudent(students, elTableBody)
+		})
+
+		// renderTableStudent(students, elTableBody)
 	}
 }
 
