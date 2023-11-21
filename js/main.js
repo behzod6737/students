@@ -108,11 +108,12 @@ const addNewStudent = (e) =>{
 const onTableClick = (event) =>{
 	
 	if (event.target.matches('.student-delete')) {
-		const currentRowId = event.target.closest('.student__table-row').dataset.id
+		let currentRowId = event.target.closest('.student__table-row').dataset.id
 		// const currentStudentIndex = students.findIndex(student =>  student.id === +currentRowId)
 
-		renderTableStudent(students.filter( student =>  student.id !== currentRowId ),elTableBody)
-		
+		students = students.filter( student =>  student.id !== +currentRowId )
+		renderTableStudent(students,elTableBody)
+
 	}else if (event.target.matches('.student-edit')) {
 		const currentRowId = event.target.closest('.student__table-row').dataset.id
 		
@@ -159,12 +160,15 @@ elForm.addEventListener('submit' , (e) => {
 	renderTableStudent(students.filter(student => {
 		const inputPercent = Math.round((student.mark * MARK_PERCENT) / TOTAL_MARK)
 		
-		if ( elinputFrom.value <= inputPercent && elinputto.value >= inputPercent) {
+		if (`${student.name} ${student.lastName}`.includes(elInputName.value) && (elinputFrom.value ? elinputFrom.value : 0) <= inputPercent  && (elinputto.value ? elinputto.value : 100 ) >= inputPercent) {
 			return student
+
 		} 
 	}),elTableBody)
 
 })
+
+//   
 // elForm.addEventListener('input', (e) => {
 // 	const searchingValue = new RegExp(e.target.value, 'gi')
 
