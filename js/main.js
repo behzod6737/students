@@ -15,10 +15,15 @@ const FAIL_PERCENT = 40
 
 const elForm = getElement('.filter')
 const elInputName = getElement('.input__name')
+const elinputFrom = getElement('.filter-form__from')
+const elinputto = getElement('.filter-form__to')
+
+
 const elAddForm = getElement('.add-form')
 const elInputAddName = getElement('.add-input__name')
 const elInputAddLastName = getElement('.add-input__lastname')
 const elInputAddMark = getElement('.add-input__mark')
+
 
 const elInputEditForm = getElement('.edit__form')
 const elInputEditName = getElement('#edit-name')
@@ -68,14 +73,16 @@ const renderTableStudent = (students, goingElement ) =>{
 renderTableStudent(students, elTableBody)
 
 // ! filtering students
-const filterSearch = (e) => {
-	e.preventDefault()
-	if (elInputName.value === '') {
-		return renderTableStudent(students, elTableBody)
-	}
-	renderTableStudent(students.filter(student => student.name.toLowerCase().includes(elInputName.value.toLowerCase().trim() ) || student.lastName.toLowerCase().includes(elInputName.value.toLowerCase().trim()) ),elTableBody)
-	e.target.reset()
-}
+// const filterSearch = (e) => {
+
+// 	const searchingValue = new RegExp(e.target.value, 'gi')
+
+// 	if (searchingValue === '') {
+// 		return renderTableStudent(students, elTableBody)
+// 	}
+
+// 	renderTableStudent(students.filter(student => `${student.name} ${student.lastName}`.match(searchingValue) ),elTableBody)
+// }
 // ! add new student 
 const addNewStudent = (e) =>{
 	
@@ -90,7 +97,7 @@ const addNewStudent = (e) =>{
 		})
 		renderTableStudent(students, elTableBody)
 		e.target.reset()
-		alert('add new student')		
+		alert('new student is added')		
 	}
 	
 	
@@ -102,12 +109,13 @@ const onTableClick = (event) =>{
 	
 	if (event.target.matches('.student-delete')) {
 		const currentRowId = event.target.closest('.student__table-row').dataset.id
-		const currentStudentIndex = students.findIndex(student =>  student.id === +currentRowId)
-		students.splice(currentStudentIndex,1)
-		renderTableStudent(students, elTableBody)
+		// const currentStudentIndex = students.findIndex(student =>  student.id === +currentRowId)
+
+		renderTableStudent(students.filter( student =>  student.id !== currentRowId ),elTableBody)
+		
 	}else if (event.target.matches('.student-edit')) {
 		const currentRowId = event.target.closest('.student__table-row').dataset.id
-			
+		
 		const currentStudentIndex = students.findIndex(student => student.id === +currentRowId)
 
 		const {name, lastName, mark,id,markedDate} = students[currentStudentIndex]
@@ -144,4 +152,25 @@ if (elTableBody) {
 }
 
 elAddForm.addEventListener('submit', addNewStudent)
-elForm.addEventListener('submit', filterSearch)
+
+elForm.addEventListener('submit' , (e) => {
+	e.preventDefault()
+
+	renderTableStudent(students.filter(student => {
+		const inputPercent = Math.round((student.mark * MARK_PERCENT) / TOTAL_MARK)
+		
+		if ( elinputFrom.value <= inputPercent && elinputto.value >= inputPercent) {
+			return student
+		} 
+	}),elTableBody)
+
+})
+// elForm.addEventListener('input', (e) => {
+// 	const searchingValue = new RegExp(e.target.value, 'gi')
+
+// 	if (searchingValue === '') {
+// 		return renderTableStudent(students, elTableBody)
+// 	}
+
+// 	renderTableStudent(students.filter(student => `${student.name} ${student.lastName}`.match(searchingValue) ),elTableBody)
+// })
