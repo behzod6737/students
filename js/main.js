@@ -158,7 +158,7 @@ elAddForm.addEventListener('submit', addNewStudent)
 elForm.addEventListener('submit' , (e) => {
 	e.preventDefault()
 
-	renderTableStudent(students.filter(student => {
+				if(a.name < b.name ) return -1
 		const inputPercent = Math.round((student.mark * MARK_PERCENT) / TOTAL_MARK)
 		
 		if (`${student.name} ${student.lastName}`.includes(elInputName.value) && (elinputFrom.value ? elinputFrom.value : 0) <= inputPercent  && (elinputto.value ? elinputto.value : 100 ) >= inputPercent) {
