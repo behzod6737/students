@@ -73,7 +73,7 @@ const renderTableStudent = (students, goingElement ) =>{
 }
 renderTableStudent(students, elTableBody)
 
-// ! filtering students
+// ! filtering students yemagan versiya
 // const filterSearch = (e) => {
 
 // 	const searchingValue = new RegExp(e.target.value, 'gi')
@@ -84,10 +84,12 @@ renderTableStudent(students, elTableBody)
 
 // 	renderTableStudent(students.filter(student => `${student.name} ${student.lastName}`.match(searchingValue) ),elTableBody)
 // }
+
+
 // ! add new student 
 const addNewStudent = (e) =>{
-	
 	e.preventDefault()
+	
 	if(elInputAddName.value.trim() && elInputAddLastName.value.trim() &&  elInputAddMark.value.trim()) {
 		students.push({
 			id: students[students.length -1].id + 1 ,
@@ -104,7 +106,7 @@ const addNewStudent = (e) =>{
 	
 }
 
-// !edit va delete button 
+// ! delete and  edit  buttons 
 
 const onTableClick = (event) =>{
 	
@@ -155,27 +157,30 @@ if (elTableBody) {
 
 elAddForm.addEventListener('submit', addNewStudent)
 
+// ! filtering students  new version
 elForm.addEventListener('submit' , (e) => {
 	e.preventDefault()
 
+	let newStudent = [...students].sort((a,b) => {
+		switch (elInputFilterSort.value) {
+			case '1':
 				if(a.name < b.name ) return -1
+				else if( a.name > b.name ) return 1
+				else return 0
+			case '2':
+				return a.mark -b.mark
+			case '3':
+				return b.mark -a.mark	
+			case '4':
+				return new Date(a.markedDate).getDate() - new Date(b.markedDate).getDate()	
+		}
+	})
+
+	renderTableStudent(newStudent.filter(student => {
 		const inputPercent = Math.round((student.mark * MARK_PERCENT) / TOTAL_MARK)
 		
 		if (`${student.name} ${student.lastName}`.includes(elInputName.value) && (elinputFrom.value ? elinputFrom.value : 0) <= inputPercent  && (elinputto.value ? elinputto.value : 100 ) >= inputPercent) {
 			return student
-
 		} 
 	}),elTableBody)
-
 })
-
-//   
-// elForm.addEventListener('input', (e) => {
-// 	const searchingValue = new RegExp(e.target.value, 'gi')
-
-// 	if (searchingValue === '') {
-// 		return renderTableStudent(students, elTableBody)
-// 	}
-
-// 	renderTableStudent(students.filter(student => `${student.name} ${student.lastName}`.match(searchingValue) ),elTableBody)
-// })
