@@ -17,6 +17,7 @@ const elForm = getElement('.filter')
 const elInputName = getElement('.input__name')
 const elinputFrom = getElement('.filter-form__from')
 const elinputto = getElement('.filter-form__to')
+const elInputFilterSort = getElement('#sortby')
 
 
 const elAddForm = getElement('.add-form')
