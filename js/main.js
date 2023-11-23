@@ -1,3 +1,10 @@
+let students = []
+
+if(localStorage.getItem('students')){    // bowida kirganinda hec nma bomidikuu ahir ken yuhlangandan ken boladikuu
+	students = JSON.parse(localStorage.getItem('students'))
+};
+
+
 const getElement = (element, parentElement = document) => parentElement.querySelector(element)
 
 const fixDate = (date) =>{
@@ -41,6 +48,7 @@ let elAvarageMark = getElement('.avarage-mark')
 
 // ! rendering students table
 const renderTableStudent = (students, goingElement ) =>{
+	localStorage.setItem('students', JSON.stringify(students))
 	goingElement.innerHTML =  null
 	const fragment  = document.createDocumentFragment()
 
@@ -92,7 +100,7 @@ const addNewStudent = (e) =>{
 	
 	if(elInputAddName.value.trim() && elInputAddLastName.value.trim() &&  elInputAddMark.value.trim()) {
 		students.push({
-			id: students[students.length -1].id + 1 ,
+			id: (students[students.length -1]?.id ?? 0) + 1 ,
 			name: elInputAddName.value,
 			lastName: elInputAddLastName.value,
 			mark: elInputAddMark.value,
@@ -172,15 +180,22 @@ elForm.addEventListener('submit' , (e) => {
 			case '3':
 				return b.mark -a.mark	
 			case '4':
-				return new Date(a.markedDate).getDate() - new Date(b.markedDate).getDate()	
+				return new Date(a.markedDate).getDate() - new Date(b.markedDate).getDate() 
+				&& new Date(a.markedDate).getMonth()  - new Date(b.markedDate).getMonth()	
+				&& new Date(a.markedDate).getFullYear() - new Date(b.markedDate).getFullYear()
 		}
 	})
 
 	renderTableStudent(newStudent.filter(student => {
 		const inputPercent = Math.round((student.mark * MARK_PERCENT) / TOTAL_MARK)
 		
-		if (`${student.name} ${student.lastName}`.includes(elInputName.value) && (elinputFrom.value ? elinputFrom.value : 0) <= inputPercent  && (elinputto.value ? elinputto.value : 100 ) >= inputPercent) {
+		if (`${student.name} ${student.lastName}`.includes(elInputName.value)
+		 && (elinputFrom.value ? elinputFrom.value : 0) <= inputPercent 
+		 && (elinputto.value ? elinputto.value : 100 ) >= inputPercent){
 			return student
 		} 
 	}),elTableBody)
 })
+
+
+console.log(students);
