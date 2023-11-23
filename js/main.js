@@ -1,6 +1,6 @@
 let students = []
 
-if(localStorage.getItem('students')){    // bowida kirganinda hec nma bomidikuu ahir ken yuhlangandan ken boladikuu
+if(localStorage.getItem('students')){   
 	students = JSON.parse(localStorage.getItem('students'))
 };
 
@@ -65,7 +65,6 @@ const renderTableStudent = (students, goingElement ) =>{
 		getElement('.student-marked-date',template).textContent = fixDate(markedDate)
 		let markTotalPercent = Math.round((mark * MARK_PERCENT) / TOTAL_MARK)
 		elAvarageMark.textContent = `Average mark:65%`
-		// shunaqa yo'l bilan chaqirib osayam boladi dom nodani 
 		template.querySelector('.student-mark').textContent = markTotalPercent + '%';
 
 		if (markTotalPercent <= FAIL_PERCENT) {
@@ -81,21 +80,9 @@ const renderTableStudent = (students, goingElement ) =>{
 }
 renderTableStudent(students, elTableBody)
 
-// ! filtering students yemagan versiya
-// const filterSearch = (e) => {
-
-// 	const searchingValue = new RegExp(e.target.value, 'gi')
-
-// 	if (searchingValue === '') {
-// 		return renderTableStudent(students, elTableBody)
-// 	}
-
-// 	renderTableStudent(students.filter(student => `${student.name} ${student.lastName}`.match(searchingValue) ),elTableBody)
-// }
-
-
 // ! add new student 
 const addNewStudent = (e) =>{
+	localStorage.setItem('students', JSON.stringify(students))
 	e.preventDefault()
 	
 	if(elInputAddName.value.trim() && elInputAddLastName.value.trim() &&  elInputAddMark.value.trim()) {
@@ -117,14 +104,14 @@ const addNewStudent = (e) =>{
 // ! delete and  edit  buttons 
 
 const onTableClick = (event) =>{
-	
+	localStorage.setItem('students', JSON.stringify(students))
 	if (event.target.matches('.student-delete')) {
 		let currentRowId = event.target.closest('.student__table-row').dataset.id
 		// const currentStudentIndex = students.findIndex(student =>  student.id === +currentRowId)
-
+		
 		students = students.filter( student =>  student.id !== +currentRowId )
 		renderTableStudent(students,elTableBody)
-
+		
 	}else if (event.target.matches('.student-edit')) {
 		const currentRowId = event.target.closest('.student__table-row').dataset.id
 		
@@ -140,7 +127,9 @@ const onTableClick = (event) =>{
 		elInputEditForm.addEventListener('submit', (event) => {
 			event.preventDefault()
 			
-			if (elInputEditName.value.trim() && elInputEditLastName.value.trim() && +elInputEditMark.value.trim() && +elInputEditMark.value >= 0 && +elInputEditMark.value  <= 150 ) {
+			if (elInputEditName.value.trim() 
+			&& elInputEditLastName.value.trim() && +elInputEditMark.value.trim()
+			 && +elInputEditMark.value >= 0 && +elInputEditMark.value  <= 150 ) {
 				
 				const editedStudent = {
 					id,
@@ -152,8 +141,8 @@ const onTableClick = (event) =>{
 				students.splice(currentStudentIndex,1,editedStudent)
 			}
 
-			renderTableStudent(students, elTableBody)
-		})
+			renderTableStudent(students, elTableBody)	
+		})		
 
 		// renderTableStudent(students, elTableBody)
 	}
@@ -165,11 +154,25 @@ if (elTableBody) {
 
 elAddForm.addEventListener('submit', addNewStudent)
 
+// ! filtering students yemagan versiya
+
+// const filterSearch = (e) => {
+
+// 	const searchingValue = new RegExp(e.target.value, 'gi')
+
+// 	if (searchingValue === '') {
+// 		return renderTableStudent(students, elTableBody)
+// 	}
+
+// 	renderTableStudent(students.filter(student => `${student.name} ${student.lastName}`.match(searchingValue) ),elTableBody)
+// }
+
 // ! filtering students  new version
 elForm.addEventListener('submit' , (e) => {
+	localStorage.setItem('students', JSON.stringify(students))
 	e.preventDefault()
 
-	let newStudent = [...students].sort((a,b) => {
+	students.sort((a,b) => {
 		switch (elInputFilterSort.value) {
 			case '1':
 				if(a.name < b.name ) return -1
@@ -184,18 +187,15 @@ elForm.addEventListener('submit' , (e) => {
 				&& new Date(a.markedDate).getMonth()  - new Date(b.markedDate).getMonth()	
 				&& new Date(a.markedDate).getFullYear() - new Date(b.markedDate).getFullYear()
 		}
-	})
+	});
 
-	renderTableStudent(newStudent.filter(student => {
-		const inputPercent = Math.round((student.mark * MARK_PERCENT) / TOTAL_MARK)
+	renderTableStudent(students.filter(student => {
+		const inputPercent = Math.round((student.mark * MARK_PERCENT) / TOTAL_MARK)	
 		
-		if (`${student.name} ${student.lastName}`.includes(elInputName.value)
-		 && (elinputFrom.value ? elinputFrom.value : 0) <= inputPercent 
-		 && (elinputto.value ? elinputto.value : 100 ) >= inputPercent){
+		if (`${student.name.toLowerCase()}${student.lastName.toLowerCase()}`.includes(elInputName.value.toLowerCase()) 
+		&& (elinputFrom.value ? elinputFrom.value : 0) <= inputPercent 
+	&& (elinputto.value ? elinputto.value : 100 ) >= inputPercent){
 			return student
 		} 
 	}),elTableBody)
 })
-
-
-console.log(students);
